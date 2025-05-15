@@ -1,0 +1,105 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Task3_2.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="using:Task3_2.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Task3_2.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Моделирование пешеходного перехода"
+        Width="800" Height="450">
+
+    <Window.Resources>
+        <conv:TrafficLightColorConverter x:Key="TrafficLightColorConverter"/>
+        <conv:CarColorConverter x:Key="CarColorConverter"/>
+        <conv:AddValueConverter x:Key="AddValueConverter"/>
+    </Window.Resources>
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" 
+                   Text="Моделирование работы пешеходного перехода" 
+                   HorizontalAlignment="Center" 
+                   FontSize="20"
+                   Margin="0,10,0,10"/>
+        
+        <Canvas Grid.Row="1" Background="LightGray" Name="MainCanvas">
+            <!-- Дорога -->
+            <Rectangle Canvas.Left="0" 
+                       Canvas.Top="{Binding RoadY}" 
+                       Width="800" 
+                       Height="{Binding RoadHeight}" 
+                       Fill="Gray"/>
+            
+            <!-- Пешеходный переход (зебра) -->
+            <Rectangle Canvas.Left="{Binding CrossingX}" 
+                       Canvas.Top="{Binding RoadY}" 
+                       Width="{Binding CrossingWidth}" 
+                       Height="{Binding RoadHeight}" 
+                       Fill="WhiteSmoke"
+                       StrokeThickness="2"
+                       Stroke="Black"/>
+            
+            <!-- Линии зебры -->
+            <Rectangle Canvas.Left="{Binding CrossingX}" 
+                       Canvas.Top="{Binding RoadY, Converter={StaticResource AddValueConverter}, ConverterParameter=10}" 
+                       Width="{Binding CrossingWidth}" 
+                       Height="10" 
+                       Fill="Black"/>
+            
+            <Rectangle Canvas.Left="{Binding CrossingX}" 
+                       Canvas.Top="{Binding RoadY, Converter={StaticResource AddValueConverter}, ConverterParameter=30}" 
+                       Width="{Binding CrossingWidth}" 
+                       Height="10" 
+                       Fill="Black"/>
+            
+            <Rectangle Canvas.Left="{Binding CrossingX}" 
+                       Canvas.Top="{Binding RoadY, Converter={StaticResource AddValueConverter}, ConverterParameter=50}" 
+                       Width="{Binding CrossingWidth}" 
+                       Height="10" 
+                       Fill="Black"/>
+            
+            <Rectangle Canvas.Left="{Binding CrossingX}" 
+                       Canvas.Top="{Binding RoadY, Converter={StaticResource AddValueConverter}, ConverterParameter=70}" 
+                       Width="{Binding CrossingWidth}" 
+                       Height="10" 
+                       Fill="Black"/>
+            
+            <Rectangle Canvas.Left="{Binding CrossingX}" 
+                       Canvas.Top="{Binding RoadY, Converter={StaticResource AddValueConverter}, ConverterParameter=90}" 
+                       Width="{Binding CrossingWidth}" 
+                       Height="10" 
+                       Fill="Black"/>
+            
+            <!-- Светофор -->
+            <Border Canvas.Left="{Binding CrossingX, Converter={StaticResource AddValueConverter}, ConverterParameter=-30}" 
+                    Canvas.Top="{Binding RoadY, Converter={StaticResource AddValueConverter}, ConverterParameter=-50}" 
+                    Width="20" 
+                    Height="40" 
+                    Background="Black" 
+                    CornerRadius="3">
+                <Ellipse Width="16" 
+                         Height="16" 
+                         Fill="{Binding TrafficLightState, Converter={StaticResource TrafficLightColorConverter}}" 
+                         Margin="0,4,0,0" 
+                         VerticalAlignment="Top"/>
+            </Border>
+        </Canvas>
+        
+        <TextBlock Grid.Row="2" 
+                   Text="{Binding StatusMessage}" 
+                   HorizontalAlignment="Center" 
+                   Margin="0,10,0,10"/>
+    </Grid>
+</Window>
